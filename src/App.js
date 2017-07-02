@@ -1,33 +1,51 @@
 import React, { Component } from 'react';
 import './App.css';
-import World from './world/World';
+import Engine from './engine/Engine';
 import Viewport from './view/Viewport';
-import Seeker from './agents/Seeker';
 
 class App extends Component {
 
     constructor(props, context) {
         super(props, context);
 
-        this.world = new World(600, 600);
-        this.viewportSize = {width: 600, height: 600};
-
-        for (let i = 0; i < 1000; i++) {
-            this.world.addAgent(new Seeker("Seeker " + i,20,20, 1 + 10.0  * Math.random()));
+        this.state = {
+            viewportSize: {
+                width: 0,
+                height: 0
+            }
         }
+        this.engine = new Engine();
     }
 
     componentDidMount = () => {
-        requestAnimationFrame(this.tick);
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+        this.engine.loadBounceWorld();
+        this.engine.start();
     }
 
-    tick = () => {
-        this.world.tick();
-        requestAnimationFrame(this.tick);
+    componentWillUnmountMount = () => {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions = () => {
+        const newSize = {
+            width: window.innerWidth,
+            height: window.innerHeight - 30
+        }
+        this.setState({
+            viewportSize: newSize
+        });
+        this.engine.setSize(newSize);
     }
 
     render = () => {
-        return <div><Viewport world={this.world} size={this.viewportSize} /></div>
+        return <div>
+            <Viewport engine={this.engine} size={this.state.viewportSize} />
+            <br/>
+            <button onClick={this.engine.loadBounceWorld}>Bounce</button>
+            <button onClick={this.engine.loadChaseWorld}>Chase</button>
+        </div>
     }
 }
 

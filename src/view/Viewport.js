@@ -5,7 +5,7 @@ class Viewport extends Component {
 
     constructor(props, context) {
         super(props, context);
-        props.world.registerViewport(this);
+        props.engine.registerViewport(this);
     }
 
     componentDidMount = () => {
@@ -25,9 +25,9 @@ class Viewport extends Component {
         context.fillStyle = '#000';
         context.fillRect(0,0,this.props.size.width,this.props.size.height);
 
-        for (const agent of this.props.world.agents) {
+        for (const agent of this.props.engine.world.agents) {
             context.save();
-            context.translate(agent.x,agent.y);
+            context.translate(agent.position.x,agent.position.y);
             context.fillStyle = agent.color;
             let offset = -agent.size / 2;
             context.fillRect(offset, offset, agent.size, agent.size);
