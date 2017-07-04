@@ -29,14 +29,15 @@ class App extends Component {
     }
 
     updateWindowDimensions = () => {
-        const newSize = {
+
+        const viewportSize = {
             width: window.innerWidth,
             height: window.innerHeight - 30
         }
+
         this.setState({
-            viewportSize: newSize
+            viewportSize
         });
-        this.engine.setSize(newSize);
     }
 
     render = () => {

@@ -5,12 +5,13 @@ class World {
         this.agents=[];
 
         this.airDensity = 1.225; // kg/m3
+        this.gravity = 9.8;
     }
 
-    tick = () => {
+    tick = (elapsedSeconds) => {
 
         for (const agent of this.agents) {
-            agent.tick();
+            agent.tick(elapsedSeconds);
         }
 
     }

@@ -7,27 +7,22 @@ class Engine {
         this.tickCount = 0;
         this.logTickCount();
         this.elapsed = 0;
-        this.size = {
-            width: 10,
-            height: 10
+        this.worldSize = {
+            width: 100,
+            height: 100
         }
     }
 
     loadBounceWorld = () => {
-        console.log("Starting new bounce world of " + this.size.width + "," + this.size.height);
-        this.world = new WorldBuilder().bounceWorld(this.size);
+        console.log("Starting new bounce world of " + this.worldSize.width + "," + this.worldSize.height);
+        this.world = new WorldBuilder().bounceWorld(this.worldSize);
     }
     loadChaseWorld = (size) => {
-        this.world = new WorldBuilder().chaseWorld(this.size);
-    }
-    setSize = (size) => {
-        this.size = size;
-        if (this.world) {
-            this.world.size = size;
-        }
+        this.world = new WorldBuilder().chaseWorld(this.worldSize);
     }
 
     start = () => {
+        this.lastTick = Date.now();
         this.tick();
     }
 
@@ -37,9 +32,13 @@ class Engine {
 
     tick = () => {
 
+        const now = Date.now();
+        const elapsedSeconds = (now - this.lastTick) / 1000;
+        this.lastTick = now;
+
         this.tickCount++;
 
-        this.world.tick();
+        this.world.tick(elapsedSeconds);
 
         for (const viewport of this.viewports) {
             viewport.paint();

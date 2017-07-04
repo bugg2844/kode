@@ -6,16 +6,16 @@ class Agent {
     constructor(options) {
         
         options = {
-            acceleration: new Vector(),
             velocity: new Vector(),
             position: new Vector(),
             size: 1,
             color: '#FFFFFF',
             name: "Agent",
+            frictionCoefficient: .5,
             dragCoefficient: .5,
-            area: .1 * .1, //1, //.1, //m2
+            area: .1,
             mass: 10, //kg
-            power: 10, //kg * s * s
+            maxPower: 10, //kg * s * s
             painter: new ColoredSquarePainter(this),
             drawText: false,
             ...options
@@ -25,27 +25,56 @@ class Agent {
     }
 
     getAccel = () => {
-        return this.acceleration;
+        return {
+            vector: new Vector(0,0,0),
+            power: 0
+        }
     }
 
-    tick = () => {
+    tick = (elapsedSeconds) => {
 
-        this.acceleration = this.getAccel();
-
+        let {vector: accelerationVector, power: accelerationPower} = this.getAccel();
+        if (accelerationPower > this.maxPower) {
+            accelerationPower = this.maxPower;
+        } else if (accelerationPower < -this.maxPower) {
+            accelerationPower = -this.maxPower;
+        }
+        
         const velocityMagnitude = this.velocity.magnitude();
-        const dragMagnitude = this.dragCoefficient * .5 * this.world.airDensity * velocityMagnitude * velocityMagnitude * this.area;
-        this.drag = new Vector().add(this.velocity).normalize().scale(-dragMagnitude);
-        this.acceleration = this.acceleration.normalize().scale(this.power / this.mass);
-        this.acceleration.add(this.drag);
+        accelerationVector.normalize().scale(accelerationPower / this.mass);
+        const accelMagnitude = accelerationVector.magnitude();
+
+        let dragAccelMagnitude, frictionAccelMagnitude;
+        if (this.world.airDensity) {
+            const dragForceMagnitude = this.dragCoefficient * .5 * this.world.airDensity * velocityMagnitude * velocityMagnitude * this.area;
+            dragAccelMagnitude = dragForceMagnitude / this.mass;
+            const dragAccel = new Vector().add(this.velocity).normalize().scale(-dragAccelMagnitude);
+            accelerationVector.add(dragAccel);
+        }
+
+        if (this.world.gravity) {
+            const frictionForceMagnitude = this.frictionCoefficient * this.world.gravity;
+            frictionAccelMagnitude = frictionForceMagnitude / this.mass;
+            const frictionAccel = new Vector().add(this.velocity).normalize().scale(-frictionAccelMagnitude);
+            accelerationVector.add(frictionAccel);
+        }
         if (this.drawText) {
-            this.text = "" + Math.round(velocityMagnitude * 2.237) + " MPH" + ", drag: " + (Math.round(100 * dragMagnitude) / 100) + " kg * m/s2";
+           this.text = 
+            "P: " + Math.round(10 * this.position.x) / 10 + "," + Math.round(10 * this.position.y) / 10 + ", " +
+           " A: " + (Math.round(100 * accelMagnitude * 2.237) / 100) + " MPH/s, " +
+            "D: " + (Math.round(100 * dragAccelMagnitude * 2.237) / 100) + "  MPH/s, " +
+            "F:" + (Math.round(100 * frictionAccelMagnitude * 2.237) / 100) + " MPH/s, " +
+            "V: " + Math.round(velocityMagnitude * 2.237) + " MPH";
         }
 
         // Update physics
-        this.velocity.add(this.acceleration);
-        this.position.add(this.velocity);
+        this.velocity.add(accelerationVector.scale(elapsedSeconds));
+        const elapsedVelocity = new Vector().add(this.velocity).scale(elapsedSeconds);
+        this.position.add(elapsedVelocity);
+        // this.velocity.add(this.acceleration.scale(1/60));
+        // this.position.add(new Vector().add(this.velocity).scale(1/60));
 
-        // Max bounds
+        // Bounce off walls
         if (!this.ignoreBounds) {
             if (this.position.x >= this.world.size.width && this.velocity.x > 0) {
                 this.velocity.x *= -1;

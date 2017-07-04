@@ -9,8 +9,12 @@ class Seeker extends Agent {
                 name: "Seeker",
                 color: "#8800FF",
                 ignoreBounds: false,
-                power:2 + Math.random(),
-                ...state,
+                maxPower: 1000, //2 + Math.random(),
+                dragCoefficient: 5,
+                frictionCoefficient: 5,
+                area: .04,
+                mass: 10, //kg
+                ...state
             }
         );
         this.bouncer = state.bouncer;
@@ -20,15 +24,16 @@ class Seeker extends Agent {
 
         const accel = new Vector()
             .add(this.bouncer.position)
-            .subtract(this.position).normalize().scale(180);
+            .subtract(this.position);
 
-        // if (accel.magnitude() < 100) {
-        //     accel.scale(0);
-        // }
+        const power = 1000; //4 * accel.magnitude() - 100;
+        const chaos = 1.5;
+        accel.normalize().add(new Vector(chaos - 2 * chaos * Math.random(), chaos - 2 * chaos * Math.random(), 0));
 
-        accel.add(new Vector(500 * Math.random() - 250, 500 * Math.random() - 250, 0));
-
-        return accel;
+        return {
+            vector: accel,
+            power
+        }
     }
 }
 

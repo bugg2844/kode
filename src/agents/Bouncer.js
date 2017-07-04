@@ -8,19 +8,20 @@ class Bouncer extends Agent {
             {
                 name: "Bouncer",
                 velocity: new Vector(
+                    1 + 45 * Math.random(),
                     1 + 15 * Math.random(),
-                    1 + 5 * Math.random(),
                     0),
                 size: 5,
                 color: '#8800FF'
             }
         );
-        this.initialVelocity = new Vector(1 + 15 * Math.random(), 1 + 5 * Math.random());
     }
         
     getAccel = () => {
-
-        return new Vector().add(this.velocity);
+        return {
+            vector: new Vector().add(this.velocity),
+            power:1000
+        }
     }
 
 }

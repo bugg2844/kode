@@ -9,13 +9,21 @@ class Viewport extends Component {
     }
 
     componentDidMount = () => {
-        console.log("Initial saving context");
         this.context = ReactDOM.findDOMNode(this).getContext('2d');
+        this.calculateScale();
     }
 
     componentDidUpdate = () => {
-        console.log("Saving context");
+        console.log("Viewport updated");
         this.context = ReactDOM.findDOMNode(this).getContext('2d');
+        this.calculateScale();
+    }
+
+    calculateScale = () => {
+        this.scale = {
+            x: this.props.size.width / this.props.engine.worldSize.width,
+            y: this.props.size.height / this.props.engine.worldSize.height
+        }
     }
 
     paint = () => {
@@ -28,7 +36,7 @@ class Viewport extends Component {
         for (const agent of this.props.engine.world.agents) {
             context.save();
 
-            agent.painter.paint(context);
+            agent.painter.paint(context,this.scale);
 
             context.restore();
         }

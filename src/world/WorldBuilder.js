@@ -41,7 +41,7 @@ class WorldBuilder {
                     bouncer: bouncer
                 }));
         }
-        world.agents[999].drawText = true;
+        //world.agents[999].drawText = true;
         return world;
     }
 
