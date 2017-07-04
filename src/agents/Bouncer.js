@@ -15,6 +15,12 @@ class Bouncer extends Agent {
                 color: '#8800FF'
             }
         );
+        this.initialVelocity = new Vector(1 + 15 * Math.random(), 1 + 5 * Math.random());
+    }
+        
+    getAccel = () => {
+
+        return new Vector().add(this.velocity);
     }
 
 }

@@ -9,29 +9,26 @@ class Seeker extends Agent {
                 name: "Seeker",
                 color: "#8800FF",
                 ignoreBounds: false,
+                power:2 + Math.random(),
                 ...state,
             }
         );
         this.bouncer = state.bouncer;
     }
 
-    update = () => {
+    getAccel = () => {
 
-        const distance = new Vector()
+        const accel = new Vector()
             .add(this.bouncer.position)
-            .subtract(this.position);
+            .subtract(this.position).normalize().scale(180);
 
-        if (distance.magnitude() > 100) {
-            this.acceleration = distance
-                .normalize()
-                .scale(.3);            
-        } else {
-            this.acceleration.scale(0);
-        }
+        // if (accel.magnitude() < 100) {
+        //     accel.scale(0);
+        // }
 
-        if (this.velocity.magnitude() > 12) {
-            this.velocity.normalize().scale(12);
-        }
+        accel.add(new Vector(500 * Math.random() - 250, 500 * Math.random() - 250, 0));
+
+        return accel;
     }
 }
 

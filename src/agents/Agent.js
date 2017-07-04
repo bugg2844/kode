@@ -1,41 +1,52 @@
 import Vector from '../math/Vector';
+import ColoredSquarePainter from '../painters/ColoredSquarePainter';
 
 class Agent {
     
-    constructor(state) {
-
-        this.state = {
+    constructor(options) {
+        
+        options = {
             acceleration: new Vector(),
             velocity: new Vector(),
             position: new Vector(),
             size: 1,
             color: '#FFFFFF',
             name: "Agent",
-            ...state
-        }
+            dragCoefficient: .5,
+            area: .1 * .1, //1, //.1, //m2
+            mass: 10, //kg
+            power: 10, //kg * s * s
+            painter: new ColoredSquarePainter(this),
+            drawText: false,
+            ...options
+        };
 
-        this.acceleration = this.state.acceleration;
-        this.velocity = this.state.velocity;
-        this.position = this.state.position;
-        this.size = this.state.size;
-        this.color = this.state.color;
-        this.name = this.state.name;
+        Object.assign(this,options);
     }
 
-    update = () => {
-
+    getAccel = () => {
+        return this.acceleration;
     }
 
     tick = () => {
 
-        this.update();
-        
+        this.acceleration = this.getAccel();
+
+        const velocityMagnitude = this.velocity.magnitude();
+        const dragMagnitude = this.dragCoefficient * .5 * this.world.airDensity * velocityMagnitude * velocityMagnitude * this.area;
+        this.drag = new Vector().add(this.velocity).normalize().scale(-dragMagnitude);
+        this.acceleration = this.acceleration.normalize().scale(this.power / this.mass);
+        this.acceleration.add(this.drag);
+        if (this.drawText) {
+            this.text = "" + Math.round(velocityMagnitude * 2.237) + " MPH" + ", drag: " + (Math.round(100 * dragMagnitude) / 100) + " kg * m/s2";
+        }
+
         // Update physics
         this.velocity.add(this.acceleration);
         this.position.add(this.velocity);
 
         // Max bounds
-        if (!this.state.ignoreBounds) {
+        if (!this.ignoreBounds) {
             if (this.position.x >= this.world.size.width && this.velocity.x > 0) {
                 this.velocity.x *= -1;
                 this.position.x = this.world.size.width - 1;

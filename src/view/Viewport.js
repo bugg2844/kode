@@ -27,10 +27,9 @@ class Viewport extends Component {
 
         for (const agent of this.props.engine.world.agents) {
             context.save();
-            context.translate(agent.position.x,agent.position.y);
-            context.fillStyle = agent.color;
-            let offset = -agent.size / 2;
-            context.fillRect(offset, offset, agent.size, agent.size);
+
+            agent.painter.paint(context);
+
             context.restore();
         }
 

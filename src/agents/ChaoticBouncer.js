@@ -8,20 +8,22 @@ class ChaoticBouncer extends Agent {
             {
                 name: "ChaoticBouncer",
                 velocity: new Vector(
-                    1 + 15 * Math.random(),
-                    1 + 5 * Math.random(),
+                    1 + 25 * Math.random(),
+                    1 + 25 * Math.random(),
                     0),
                 size: 5,
                 color: '#FFFFFF',
+                drawText: true,
                 ...state
             }
         );
     }
 
-    update = () => {
-        if (Math.random() < .01) {
-            this.velocity.normalize().scale(1 + 15 * Math.random());
+    getAccel = () => {
+        if (Math.random() < .02) {
+            this.velocity.normalize().scale(1 + 25 * Math.random());
         }
+        return new Vector();
     }
 
 

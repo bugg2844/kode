@@ -25,7 +25,7 @@ class WorldBuilder {
             new ChaoticBouncer({
                 name: "Bouncer 1",
                 position: new Vector(20,20,0),
-                size: 1 + 10.0  * Math.random()
+                size: 5//1 + 10.0  * Math.random()
             });
         world.addAgent(bouncer);
 
@@ -41,6 +41,7 @@ class WorldBuilder {
                     bouncer: bouncer
                 }));
         }
+        world.agents[999].drawText = true;
         return world;
     }
 
