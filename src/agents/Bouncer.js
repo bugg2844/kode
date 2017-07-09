@@ -17,11 +17,8 @@ class Bouncer extends Agent {
         );
     }
         
-    getAccel = () => {
-        return {
-            vector: new Vector().add(this.velocity),
-            power:1000
-        }
+    tick = () => {
+        super.setForce(new Vector().add(this.velocity).magnitude(1000));
     }
 
 }

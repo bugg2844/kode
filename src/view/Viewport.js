@@ -33,10 +33,12 @@ class Viewport extends Component {
         context.fillStyle = '#000';
         context.fillRect(0,0,this.props.size.width,this.props.size.height);
 
+        let count = 0;
         for (const agent of this.props.engine.world.agents) {
+            count++;
             context.save();
 
-            agent.painter.paint(context,this.scale);
+            agent.painter.paint(context,this.scale,this.props.size, count % 10);
 
             context.restore();
         }

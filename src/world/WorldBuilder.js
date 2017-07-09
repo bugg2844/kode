@@ -9,11 +9,10 @@ class WorldBuilder {
     bounceWorld = (size) => {
         const world = new World(size);
         for (let i = 0; i < 1000; i++) {
-            world.addAgent(
+            world.agents.push(
                 new Bouncer({
                     name: "Bouncer " + i,
-                    position: new Vector(20,20,0),
-                    size: 5
+                    position: new Vector(20,20,0)
                 }));
         }
         return world;
@@ -24,20 +23,18 @@ class WorldBuilder {
         const bouncer = 
             new ChaoticBouncer({
                 name: "Bouncer 1",
-                position: new Vector(20,20,0),
-                size: 5//1 + 10.0  * Math.random()
+                position: new Vector(20,20,0)
             });
-        world.addAgent(bouncer);
+        world.agents.push(bouncer);
 
-        for (let i = 0; i < 1000; i++) {
-            world.addAgent(
+        for (let i = 0; i < 400; i++) {
+            world.agents.push(
                 new Seeker({
                     name: "Seeker " + i,
                     position: new Vector(
                         world.size.width * Math.random(),
                         world.size.height * Math.random(),
                         0),
-                    size: 2,
                     bouncer: bouncer
                 }));
         }

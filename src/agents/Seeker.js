@@ -14,26 +14,34 @@ class Seeker extends Agent {
                 frictionCoefficient: 5,
                 area: .04,
                 mass: 10, //kg
+                size: 3,
                 ...state
             }
         );
         this.bouncer = state.bouncer;
     }
 
-    getAccel = () => {
+    tick = () => {
 
         const accel = new Vector()
             .add(this.bouncer.position)
-            .subtract(this.position);
+//            .add(this.bouncer.velocity)
+            .subtract(this.position)
+ //           .subtract(this.velocity)
+            .normalize().scale(1000);
 
-        const power = 1000; //4 * accel.magnitude() - 100;
-        const chaos = 1.5;
-        accel.normalize().add(new Vector(chaos - 2 * chaos * Math.random(), chaos - 2 * chaos * Math.random(), 0));
+       //const sidewaysAccel = new Vector().add(accel).rotate(Math.PI / 2).scale(.2);
+       //accel.add(sidewaysAccel);
 
-        return {
-            vector: accel,
-            power
-        }
+       // accel.scale(this.mass);
+       // accel.subtract(this.dragForce);
+       // accel.subtract(this.frictionForce);
+
+//        const chaos = 5 * this.mass;
+        const chaos = 1000;
+        accel.add(new Vector(chaos - 2 * chaos * Math.random(), chaos - 2 * chaos * Math.random(), 0));
+
+        super.setForce(accel);
     }
 }
 

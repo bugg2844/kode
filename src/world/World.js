@@ -1,3 +1,5 @@
+import Physics from '../math/Physics';
+
 class World {
 
     constructor(size) {
@@ -6,21 +8,10 @@ class World {
 
         this.airDensity = 1.225; // kg/m3
         this.gravity = 9.8;
+
+        this.physics = new Physics(this);
     }
 
-    tick = (elapsedSeconds) => {
-
-        for (const agent of this.agents) {
-            agent.tick(elapsedSeconds);
-        }
-
-    }
-
-
-    addAgent = (agent) => {
-        this.agents.push(agent);
-        agent.world = this;
-    }
 }
 
 export default World;
