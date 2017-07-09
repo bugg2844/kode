@@ -3,22 +3,22 @@ import Vector from '../math/Vector';
 
 class Bouncer extends Agent {
 
-    constructor() {
+    constructor(options) {
         super(
             {
                 name: "Bouncer",
-                velocity: new Vector(
-                    1 + 45 * Math.random(),
-                    1 + 15 * Math.random(),
-                    0),
+                speed: 45,
                 size: 5,
-                color: '#8800FF'
+                color: '#8800FF',
+                ...options
             }
         );
+
+        this.velocity = new Vector(Math.random(), Math.random(),0).normalize().scale(this.speed);
     }
         
     tick = () => {
-        super.setForce(new Vector().add(this.velocity).magnitude(1000));
+        super.setVelocity(this.velocity.normalize().scale(this.speed));
     }
 
 }

@@ -3,7 +3,7 @@ import Vector from '../math/Vector';
 
 class Seeker extends Agent {
 
-    constructor(state) {
+    constructor(options) {
         super(
             {
                 name: "Seeker",
@@ -15,31 +15,31 @@ class Seeker extends Agent {
                 area: .04,
                 mass: 10, //kg
                 size: 3,
-                ...state
+                chaos:1000,
+                ...options
             }
         );
-        this.bouncer = state.bouncer;
+        this.chasing = options.chasing;
     }
 
     tick = () => {
 
         const accel = new Vector()
-            .add(this.bouncer.position)
-//            .add(this.bouncer.velocity)
+            .add(this.chasing.position)
+            .add(new Vector().add(this.chasing.velocity).scale(.9))
             .subtract(this.position)
- //           .subtract(this.velocity)
-            .normalize().scale(1000);
+            .subtract(this.velocity);
+ //           .normalize().scale(1000);
 
        //const sidewaysAccel = new Vector().add(accel).rotate(Math.PI / 2).scale(.2);
        //accel.add(sidewaysAccel);
 
-       // accel.scale(this.mass);
-       // accel.subtract(this.dragForce);
-       // accel.subtract(this.frictionForce);
+       accel.scale(this.mass);
+       accel.subtract(this.dragForce);
+       accel.subtract(this.frictionForce);
 
 //        const chaos = 5 * this.mass;
-        const chaos = 1000;
-        accel.add(new Vector(chaos - 2 * chaos * Math.random(), chaos - 2 * chaos * Math.random(), 0));
+        accel.add(new Vector(this.chaos - 2 * this.chaos * Math.random(), this.chaos - 2 * this.chaos * Math.random(), 0));
 
         super.setForce(accel);
     }

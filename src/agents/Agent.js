@@ -5,7 +5,7 @@ class Agent {
     
     constructor(options) {
         
-        options = {
+        Object.assign(this, {
             accelForce: new Vector(),
             dragForce: new Vector(),
             frictionForce: new Vector(),
@@ -23,9 +23,7 @@ class Agent {
             painter: new ColoredSquarePainter(this),
             drawText: false,
             ...options
-        };
-
-        Object.assign(this,options);
+        });
     }
 
     setForce(force) {

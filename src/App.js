@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Engine from './engine/Engine';
 import Viewport from './view/Viewport';
+import * as world from './world';
 
 class App extends Component {
 
@@ -20,8 +21,7 @@ class App extends Component {
     componentDidMount = () => {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
-        this.engine.loadChaseWorld();
-        this.engine.start();
+        this.engine.start(new world.ChaseWorld());
     }
 
     componentWillUnmountMount = () => {
@@ -44,8 +44,9 @@ class App extends Component {
         return <div>
             <Viewport engine={this.engine} size={this.state.viewportSize} />
             <br/>
-            <button onClick={this.engine.loadBounceWorld}>Bounce</button>
-            <button onClick={this.engine.loadChaseWorld}>Chase</button>
+            <button onClick={() => {this.engine.start(new world.BounceWorld())}}>Bounce</button>
+            <button onClick={() => {this.engine.start(new world.ChaseWorld())}}>Chase</button>
+            <button onClick={() => {this.engine.start(new world.LineChaseWorld())}}>Line Chase</button>
         </div>
     }
 }

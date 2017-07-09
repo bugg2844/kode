@@ -20,9 +20,12 @@ class Viewport extends Component {
     }
 
     calculateScale = () => {
-        this.scale = {
-            x: this.props.size.width / this.props.engine.worldSize.width,
-            y: this.props.size.height / this.props.engine.worldSize.height
+        if (this.props.engine.world !== undefined) {
+            this.scale = {
+                x: this.props.size.width / this.props.engine.world.size.width,
+                y: this.props.size.height / this.props.engine.world.size.height
+            }
+            console.log("Calculated viewport scale: " + this.scale.x + "," + this.scale.y);
         }
     }
 

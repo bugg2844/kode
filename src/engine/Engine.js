@@ -1,4 +1,3 @@
-import WorldBuilder from '../world/WorldBuilder';
 import Vector from '../math/Vector';
 
 class Engine {
@@ -8,41 +7,38 @@ class Engine {
         this.tickCount = 0;
         this.logRedrawCount();
         this.elapsed = 0;
-        this.worldSize = {
-            width: 100,
-            height: 100
-        }
         this.numAgentActionGroups = 1; //0;
         this.timeBetweenAction=.0001;
 
-        this.numAgentActionGroups = 4; //0;
+        this.numAgentActionGroups = 1;//4; //0;
         this.timeBetweenAction=.025;
 
         this.currentAgentActionGroup = 0;
     }
 
-    loadBounceWorld = () => {
-        console.log("Starting new bounce world of " + this.worldSize.width + "," + this.worldSize.height);
-        this.world = new WorldBuilder().bounceWorld(this.worldSize);
-    }
-    loadChaseWorld = (size) => {
-        this.world = new WorldBuilder().chaseWorld(this.worldSize);
-    }
-
-    start = () => {
-        this.lastRedraw = Date.now();
-        this.lastForceCalculation = Date.now();
-        this.lastAgentAction = Date.now();
-        this.tick();
+    start = (world) => {
+        console.log("Starting world");
+        this.world = world;
+        for (const viewport of this.viewports) {
+            viewport.calculateScale();
+        }
+        const now = performance.now();
+        this.lastRedraw = now;
+        this.lastForceCalculation = now;
+        this.lastAgentAction = now;
+        if (this.requestAnimationFrameId !== undefined)
+        {
+            cancelAnimationFrame(this.requestAnimationFrameId);
+        }
+        this.tick(now);
     }
 
     registerViewport = (viewport) => {
         this.viewports.push(viewport);
     }
 
-    tick = () => {
+    tick = (now = performance.now()) => {
 
-        const now = Date.now();
         const elapsedSecondsSinceLastRedraw = (now - this.lastRedraw) / 1000;
         this.lastRedraw = now;
 
@@ -89,7 +85,7 @@ class Engine {
         for (const viewport of this.viewports) {
             viewport.paint();
         }
-        requestAnimationFrame(this.tick);
+        this.requestAnimationFrameId = requestAnimationFrame(this.tick);
     }
 
     logRedrawCount = () => {

@@ -3,20 +3,23 @@ import Vector from '../math/Vector';
 
 class ChaoticBouncer extends Agent {
 
-    constructor(state) {
+    constructor(options) {
         super(
             {
                 name: "ChaoticBouncer",
-                velocity: new Vector(
-                    25 + 75 * Math.random(),
-                    25 + 75 * Math.random(),
-                    0),
                 size: 15,
                 color: '#FFFFFF',
                 drawText: false,
-                ...state
+                speed: 100,
+                ...options
             }
         );
+
+        this.velocity = new Vector(
+                    this.speed * Math.random(),
+                    this.speed * Math.random(),
+                    0);
+
     }
 
     tick = () => {
@@ -26,16 +29,15 @@ class ChaoticBouncer extends Agent {
         
         if (Math.random() < .01) {
 
-            const speed = 100;
             let velocity = new Vector().add(this.velocity);
 
             if (Math.random() < .1) {
                 velocity = new Vector(
-                        speed * Math.random(),
-                        speed * Math.random(),
+                        this.speed * Math.random(),
+                        this.speed * Math.random(),
                         0);
             }
-            super.setVelocity(velocity.normalize().scale(speed * Math.random()));
+            super.setVelocity(velocity.normalize().scale(this.speed * Math.random()));
         }
     }
 

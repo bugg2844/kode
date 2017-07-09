@@ -2,16 +2,20 @@ import Physics from '../math/Physics';
 
 class World {
 
-    constructor(size) {
-        this.size=size;
-        this.agents=[];
+    constructor(options) {
 
-        this.airDensity = 1.225; // kg/m3
-        this.gravity = 9.8;
-
-        this.physics = new Physics(this);
+        Object.assign(this, {
+            size: {
+                width: 100,
+                height: 100
+            },
+            agents: [],
+            airDensity: 1.225,
+            gravity: 9.8,
+            physics: new Physics(this),
+            options
+        });
     }
-
 }
 
 export default World;
