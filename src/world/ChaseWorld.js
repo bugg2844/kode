@@ -1,5 +1,5 @@
 import World from './World';
-import ChaoticBouncer from '../agents/Bouncer';
+import ChaoticBouncer from '../agents/ChaoticBouncer';
 import Seeker from '../agents/Seeker';
 import Vector from '../math/Vector';
 

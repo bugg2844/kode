@@ -15,7 +15,7 @@ class Seeker extends Agent {
                 area: .04,
                 mass: 10, //kg
                 size: 3,
-                chaos:1000,
+                chaos:700,
                 ...options
             }
         );

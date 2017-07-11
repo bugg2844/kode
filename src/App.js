@@ -21,7 +21,7 @@ class App extends Component {
     componentDidMount = () => {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
-        this.engine.start(new world.ChaseWorld());
+        this.engine.start(new world.LineChaseWorld());
     }
 
     componentWillUnmountMount = () => {

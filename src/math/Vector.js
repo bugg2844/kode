@@ -1,9 +1,19 @@
 class Vector {
 
     constructor(x=0, y=0, z=0) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        if (typeof x == 'number') {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        } else {
+            this.x = x.x;
+            this.y = x.y;
+            this.z = x.z;
+        }
+    }
+
+    clone = () => {
+        return new Vector(this);    
     }
 
     add = (v) => {
@@ -27,21 +37,19 @@ class Vector {
         return this;
     }
 
-    magnitude = (newMagnitude) => {
-        const currentMagnitude = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        if (newMagnitude === undefined) {
-            return currentMagnitude;
-        }
-        else if (currentMagnitude !== 0) {
-            this.scale(newMagnitude / currentMagnitude);
-        }
-        return this;
+    sqrt = () => {
+        const magnitude = this.magnitude();
+        const scale = (magnitude !== 0?Math.sqrt(magnitude)/magnitude:1);
+        return this.scale(scale);
+    }
 
+    magnitude = () => {
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
     angle = () => {
         if (this.y !== 0) {
-            return Math.atan(this.x/this.y);
+            return (Math.atan(this.x/this.y) + (this.y > 0?0:Math.PI));
         } else if (this.x >= 0) {
             return 0;
         } else {
