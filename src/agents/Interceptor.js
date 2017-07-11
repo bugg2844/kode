@@ -25,7 +25,7 @@ class Interceptor extends Agent {
     tick = () => {
 
         const d = this.chasing.position.clone().subtract(this.position);
-        d.add(d.clone().scale(-.5));
+        d.add(d.clone().scale(-.3));
         const v = this.chasing.velocity.clone().subtract(this.velocity);
 
         let accel;

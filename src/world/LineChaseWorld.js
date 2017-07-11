@@ -14,11 +14,11 @@ class LineChaseWorld extends World {
             new Bouncer({
                 name: "Bouncer 1",
                 position: new Vector(20,20,0),
-                speed:5
+                speed:15
             });
         this.agents.push(bouncer);
 
-        for (let i = 0; i < 400; i++) { // 400
+        for (let i = 1; i <= 400; i++) { // 400
             this.agents.push(
                 new Interceptor({
                     name: "Interceptor " + i,
@@ -31,7 +31,8 @@ class LineChaseWorld extends World {
                     chaos:0,
                     maxPower:100
                 }));
-        }    }
+        }
+    }d
 }
 
 export default LineChaseWorld;
